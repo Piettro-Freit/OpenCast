@@ -15,7 +15,7 @@ import com.google.android.gms.cast.framework.media.CastMediaOptions
 class CastOptionsProvider : OptionsProvider {
     override fun getCastOptions(context: Context): CastOptions =
         CastOptions.Builder()
-            .setReceiverApplicationId(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APP_ID)
+            .setReceiverApplicationId(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID)
             .setStopReceiverApplicationWhenEndingSession(true)
             .setCastMediaOptions(
                 CastMediaOptions.Builder()
