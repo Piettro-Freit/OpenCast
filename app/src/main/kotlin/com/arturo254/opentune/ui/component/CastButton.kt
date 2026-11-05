@@ -1,6 +1,14 @@
 package com.arturo254.opentune.ui.component
 
+import android.content.Context
+import android.os.Bundle
 import android.view.ContextThemeWrapper
+import androidx.compose.ui.draw.alpha
+import androidx.mediarouter.app.MediaRouteChooserDialog
+import androidx.mediarouter.app.MediaRouteChooserDialogFragment
+import androidx.mediarouter.app.MediaRouteControllerDialog
+import androidx.mediarouter.app.MediaRouteControllerDialogFragment
+import androidx.mediarouter.app.MediaRouteDialogFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -36,11 +44,12 @@ fun CastIconButton(
 
     Box(modifier = modifier) {
         AndroidView(
-            modifier = Modifier.size(1.dp),
+            modifier = Modifier.size(1.dp).alpha(0f),
             factory = { ctx ->
                 val themed = ContextThemeWrapper(ctx, androidx.appcompat.R.style.Theme_AppCompat_DayNight_NoActionBar)
                 MediaRouteButton(themed).also {
                     runCatching { CastButtonFactory.setUpMediaRouteButton(ctx.applicationContext, it) }
+                    it.dialogFactory = OpaqueThemeMediaRouteDialogFactory()
                     routeButton[0] = it
                 }
             },
@@ -58,4 +67,32 @@ fun CastIconButton(
                     ) { routeButton[0]?.performClick() },
         )
     }
+}
+
+/**
+ * O tema da Activity do OpenTune tem fundo transparente, e os diálogos do Cast
+ * (MediaRouterThemeHelper) lançam "background can not be translucent".
+ * Aqui os diálogos são criados com um tema AppCompat opaco.
+ */
+private fun Context.opaque(): Context =
+    ContextThemeWrapper(this, androidx.appcompat.R.style.Theme_AppCompat_DayNight_NoActionBar)
+
+class OpaqueThemeMediaRouteDialogFactory : MediaRouteDialogFactory() {
+    override fun onCreateChooserDialogFragment(): MediaRouteChooserDialogFragment = OpaqueChooserDialogFragment()
+
+    override fun onCreateControllerDialogFragment(): MediaRouteControllerDialogFragment = OpaqueControllerDialogFragment()
+}
+
+class OpaqueChooserDialogFragment : MediaRouteChooserDialogFragment() {
+    override fun onCreateChooserDialog(
+        context: Context,
+        savedInstanceState: Bundle?,
+    ): MediaRouteChooserDialog = super.onCreateChooserDialog(context.opaque(), savedInstanceState)
+}
+
+class OpaqueControllerDialogFragment : MediaRouteControllerDialogFragment() {
+    override fun onCreateControllerDialog(
+        context: Context,
+        savedInstanceState: Bundle?,
+    ): MediaRouteControllerDialog = super.onCreateControllerDialog(context.opaque(), savedInstanceState)
 }
