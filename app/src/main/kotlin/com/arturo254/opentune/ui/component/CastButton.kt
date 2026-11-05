@@ -162,7 +162,7 @@ fun ConnectDevicesSheet(onDismiss: () -> Unit) {
     val selector =
         remember {
             MediaRouteSelector.Builder()
-                .addControlCategory(CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APP_ID))
+                .addControlCategory(CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID))
                 .build()
         }
     var castRoutes by remember { mutableStateOf(emptyList<MediaRouter.RouteInfo>()) }
