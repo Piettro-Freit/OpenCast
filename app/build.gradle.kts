@@ -145,6 +145,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -335,4 +336,4 @@ configurations.configureEach {
         "androidx.compose.ui:ui-tooling:${libs.versions.compose.get()}",
         "androidx.compose.animation:animation-graphics:${libs.versions.compose.get()}",
     )
-}
+} 
